@@ -57,27 +57,25 @@ int main(int argc, char *argv[]) // This creates a pointer for the address of th
     int jpeg_count = 0; //Count must start at 000
     char file_name[8]; // how long the name of the array we will put the name in
     
-    while ((fread(buffer, sizeof(block_size) , 1 , input)) == 1) // fread will return a number 1 or 0 that is true or false
+    while (fread(buffer,block_size,1,input) == 1) // fread will return a number 1 or 0 that is true or false
     {
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
             
             if (jpeg_count != 0) // if it does not equal 0
             {
-                fclose(image); // then I wilclose
+                fclose(image); // then I will close
             }
-            
             sprintf(file_name, "%03i.jpg", jpeg_count++); //%03i means print an integer with 3 digits to represent it ++ can count 
             image = fopen(file_name, "w"); // Open file called image with the jpeg name
-            fwrite(buffer, block_size , 1, image);
+            fwrite(buffer,block_size,1,image);
         }
-        else if (jpeg_count > 0)
+        
+        else if (jpeg_count != 0)
         {
-            fwrite(buffer, block_size , 1, image);
-
+            fwrite(buffer,block_size,1,image);
         }
     }
-
     fclose(input);
     fclose(image);
     return 0;
